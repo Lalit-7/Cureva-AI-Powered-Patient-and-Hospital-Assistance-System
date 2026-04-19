@@ -55,42 +55,60 @@ if DATABASE_URL:
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 else:
     # Development: Local SQLite
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///health_tech.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/health_tech.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
-# Create tables if they don't exist
-with app.app_context():
-    db.create_all()
-    
-    # Create demo users if they don't exist
-    demo_patient = User.query.filter_by(email='Patient_demo@gmail.com').first()
-    if not demo_patient:
-        demo_patient = User(
-            username='Patient_Demo',
-            email='Patient_demo@gmail.com',
-            password=hash_password('demo_password'),  # Hashed with bcrypt
-            role='patient'
-        )
-        db.session.add(demo_patient)
-        db.session.commit()
-        print("✅ Demo patient created: Patient_Demo (Patient_demo@gmail.com)")
-        
-    demo_hospital = User.query.filter_by(email='Demo_Hospital@gmail.com').first()
-    if not demo_hospital:
-        demo_hospital = User(
-            username='Demo_Hospital',
-            email='Demo_Hospital@gmail.com',
-            password=hash_password('hospital_demo'),  # Hashed with bcrypt
-            role='hospital'
-        )
-        db.session.add(demo_hospital)
-        db.session.commit()
-        print("✅ Demo hospital created: Demo_Hospital (Demo_Hospital@gmail.com)")
-    
-    # Get the demo user ID for use in routes
-    DEMO_USER_ID = demo_patient.id
+# Initialize database only once (on first request or app startup)
+@app.before_request
+def init_db():
+    """Initialize database on first request"""
+    if not hasattr(app, 'db_initialized'):
+        try:
+            with app.app_context():
+                db.create_all()
+                
+                # Create demo users if they don't exist
+                demo_patient = User.query.filter_by(email='Patient_demo@gmail.com').first()
+                if not demo_patient:
+                    demo_patient = User(
+                        username='Patient_Demo',
+                        email='Patient_demo@gmail.com',
+                        password=hash_password('demo_password'),  # Hashed with bcrypt
+                        role='patient'
+                    )
+                    db.session.add(demo_patient)
+                    db.session.commit()
+                    print("✅ Demo patient created: Patient_Demo (Patient_demo@gmail.com)")
+                    
+                demo_hospital = User.query.filter_by(email='Demo_Hospital@gmail.com').first()
+                if not demo_hospital:
+                    demo_hospital = User(
+                        username='Demo_Hospital',
+                        email='Demo_Hospital@gmail.com',
+                        password=hash_password('hospital_demo'),  # Hashed with bcrypt
+                        role='hospital'
+                    )
+                    db.session.add(demo_hospital)
+                    db.session.commit()
+                    print("✅ Demo hospital created: Demo_Hospital (Demo_Hospital@gmail.com)")
+                
+                app.db_initialized = True
+        except Exception as e:
+            print(f"⚠️ Database initialization warning: {str(e)}")
+            # Don't crash if DB initialization fails, allow the app to continue
+            app.db_initialized = True
+
+# ==================== HELPER FUNCTIONS ====================
+def get_demo_user_id():
+    """Get demo user ID dynamically"""
+    try:
+        demo_patient = User.query.filter_by(email='Patient_demo@gmail.com').first()
+        return demo_patient.id if demo_patient else None
+    except:
+        return None
+
 
 # ==================== AUTH DECORATORS ====================
 def login_required(f):
@@ -368,7 +386,7 @@ def analyze():
 @login_required
 def create_conversation():
     """Create a new conversation"""
-    user_id = session.get('user_id', DEMO_USER_ID)
+    user_id = session.get('user_id') or get_demo_user_id()
     data = request.json
     title = data.get("title", "New Chat")
     
@@ -390,7 +408,7 @@ def create_conversation():
 @app.route("/api/conversations", methods=["GET"])
 def get_conversations():
     """Get all conversations for current user"""
-    user_id = session.get('user_id', DEMO_USER_ID)
+    user_id = session.get('user_id') or get_demo_user_id()
     conversations = Conversation.query.filter_by(
         user_id=user_id
     ).order_by(Conversation.updated_at.desc()).all()
@@ -408,7 +426,7 @@ def get_conversations():
 @app.route("/api/conversation/<int:conversation_id>", methods=["GET"])
 def get_conversation(conversation_id):
     """Get specific conversation with all messages"""
-    user_id = session.get('user_id', DEMO_USER_ID)
+    user_id = session.get('user_id') or get_demo_user_id()
     conversation = Conversation.query.get(conversation_id)
     
     if not conversation or conversation.user_id != user_id:
@@ -429,7 +447,7 @@ def get_conversation(conversation_id):
 @app.route("/api/conversation/<int:conversation_id>/title", methods=["PUT"])
 def update_conversation_title(conversation_id):
     """Update conversation title"""
-    user_id = session.get('user_id', DEMO_USER_ID)
+    user_id = session.get('user_id') or get_demo_user_id()
     conversation = Conversation.query.get(conversation_id)
     
     if not conversation or conversation.user_id != user_id:
@@ -451,7 +469,7 @@ def update_conversation_title(conversation_id):
 @app.route("/api/conversation/<int:conversation_id>", methods=["DELETE"])
 def delete_conversation(conversation_id):
     """Delete a conversation"""
-    user_id = session.get('user_id', DEMO_USER_ID)
+    user_id = session.get('user_id') or get_demo_user_id()
     conversation = Conversation.query.get(conversation_id)
     
     if not conversation or conversation.user_id != user_id:
@@ -524,7 +542,7 @@ def send_case():
     """
     try:
         data = request.json
-        user_id = session.get('user_id', DEMO_USER_ID)
+        user_id = session.get('user_id') or get_demo_user_id()
         user = User.query.get(user_id)
         
         if not user:
@@ -585,7 +603,7 @@ def patient_get_cases():
 def get_cases():
     """Get all cases (Hospital only) or own cases (Patient)"""
     role = session.get('role', 'hospital') # Defaulting to hospital for testing
-    user_id = session.get('user_id', DEMO_USER_ID)
+    user_id = session.get('user_id') or get_demo_user_id()
     
     status_filter = request.args.get('status')
     
