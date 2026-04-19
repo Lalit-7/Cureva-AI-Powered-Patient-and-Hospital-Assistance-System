@@ -34,16 +34,6 @@
   gap: 8px;
 }
 
-.sidebar-logo::before {
-  content: '';
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  border-radius: 8px;
-  display: inline-block;
-  flex-shrink: 0;
-}
-
 .sidebar-logo:hover {
   color: var(--primary-dark);
 }
@@ -475,10 +465,6 @@
 
 .sidebar.dark .sidebar-logo {
   color: #ffffff;
-}
-
-.sidebar.dark .sidebar-logo::before {
-  background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
 }
 
 .sidebar.dark .sidebar-menu a {
