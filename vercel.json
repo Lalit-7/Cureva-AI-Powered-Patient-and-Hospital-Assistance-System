@@ -1,8 +1,4 @@
 {
-  "framework": "python",
-  "python": {
-    "version": "3.11"
-  },
   "builds": [
     {
       "src": "api/index.py",
