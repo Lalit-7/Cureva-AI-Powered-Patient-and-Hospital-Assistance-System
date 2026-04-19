@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign In | Cureva</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- BRAND PANEL -->
+  <div class="auth-brand">
+    <div class="auth-brand-content">
+      <a href="/" class="logo">Cureva</a>
+      <h2>AI-Powered Medical Analysis Platform</h2>
+      <p>
+        Get instant health insights, manage your medical records,
+        and find the right specialist — all powered by advanced AI.
+      </p>
+
+      <div class="auth-features">
+        <div class="auth-feature">
+          <div class="icon">🔬</div>
+          <span>Instant AI symptom analysis</span>
+        </div>
+        <div class="auth-feature">
+          <div class="icon">📋</div>
+          <span>Medical image & report analysis</span>
+        </div>
+        <div class="auth-feature">
+          <div class="icon">🏥</div>
+          <span>Nearby hospital recommendations</span>
+        </div>
+        <div class="auth-feature">
+          <div class="icon">🔒</div>
+          <span>Secure & private health records</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="auth-form-panel">
+    <div class="auth-form-card">
+      <!-- LOGIN FORM -->
+      <div id="loginFormDiv" style="display:block;">
+        <h1>Welcome back</h1>
+        <p>Sign in to your Cureva account to continue</p>
+
+        <form id="loginForm">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text-primary);">Login as:</label>
+          <div style="display:flex; gap:16px; margin-bottom: 24px;">
+            <label style="display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="role" value="patient" checked onchange="updateDemoCreds('patient')"> Patient
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="role" value="hospital" onchange="updateDemoCreds('hospital')"> Hospital
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" required placeholder="Patient_demo@gmail.com" value="Patient_demo@gmail.com">
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" required placeholder="Enter your password" value="demo_password">
+          </div>
+
+          <p id="errorMsg" style="color:red; font-size:14px; display:none; margin-bottom:16px;"></p>
+
+          <button type="submit" class="btn-primary" id="loginBtn">Sign In</button>
+        </form>
+
+        <div class="auth-divider">or</div>
+
+        <p class="auth-switch">
+          Don't have an account? <a href="#" onclick="toggleForms(); return false;">Sign up for free</a>
+        </p>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="signupFormDiv" style="display:none;">
+        <h1>Create account</h1>
+        <p>Join Cureva to get started with AI health analysis</p>
+
+        <form id="signupForm">
+          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text-primary);">Sign up as:</label>
+          <div style="display:flex; gap:16px; margin-bottom: 24px;">
+            <label style="display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="signup-role" value="patient" checked> Patient
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+              <input type="radio" name="signup-role" value="hospital"> Hospital
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" required placeholder="Choose a username" minlength="3">
+          </div>
+
+          <div class="form-group">
+            <label for="signup-email">Email address</label>
+            <input type="email" id="signup-email" required placeholder="your@email.com">
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" required placeholder="At least 6 characters" minlength="6">
+          </div>
+
+          <div class="form-group">
+            <label for="signup-confirm">Confirm Password</label>
+            <input type="password" id="signup-confirm" required placeholder="Confirm your password" minlength="6">
+          </div>
+
+          <p id="signupErrorMsg" style="color:red; font-size:14px; display:none; margin-bottom:16px;"></p>
+          <p id="signupSuccessMsg" style="color:green; font-size:14px; display:none; margin-bottom:16px;"></p>
+
+          <button type="submit" class="btn-primary" id="signupBtn">Create Account</button>
+        </form>
+
+        <div class="auth-divider">or</div>
+
+        <p class="auth-switch">
+          Already have an account? <a href="#" onclick="toggleForms(); return false;">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Toggle between login and signup forms
+  function toggleForms() {
+    const loginDiv = document.getElementById('loginFormDiv');
+    const signupDiv = document.getElementById('signupFormDiv');
+    loginDiv.style.display = loginDiv.style.display === 'none' ? 'block' : 'none';
+    signupDiv.style.display = signupDiv.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // Get role from URL parameter and pre-select it
+  const urlParams = new URLSearchParams(window.location.search);
+  const roleParam = urlParams.get('role');
+  
+  if (roleParam === 'hospital') {
+    document.querySelector('input[value="hospital"]').checked = true;
+    updateDemoCreds('hospital');
+  } else {
+    document.querySelector('input[value="patient"]').checked = true;
+    updateDemoCreds('patient');
+  }
+
+  function updateDemoCreds(role) {
+    if (role === 'patient') {
+      document.getElementById('email').value = 'Patient_demo@gmail.com';
+      document.getElementById('password').value = 'demo_password';
+    } else {
+      document.getElementById('email').value = 'Demo_Hospital@gmail.com';
+      document.getElementById('password').value = 'hospital_demo';
+    }
+  }
+
+  // LOGIN FORM HANDLER
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('loginBtn');
+    const msg = document.getElementById('errorMsg');
+    
+    btn.disabled = true;
+    btn.innerText = 'Signing in...';
+    msg.style.display = 'none';
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const role = document.querySelector('input[name="role"]:checked').value;
+    
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role })
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        window.location.href = data.redirect;
+      } else {
+        msg.innerText = data.error || 'Invalid credentials';
+        msg.style.display = 'block';
+        btn.disabled = false;
+        btn.innerText = 'Sign In';
+      }
+    } catch (err) {
+      msg.innerText = 'Network error. Please try again.';
+      msg.style.display = 'block';
+      btn.disabled = false;
+      btn.innerText = 'Sign In';
+    }
+  });
+
+  // SIGNUP FORM HANDLER
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('signupBtn');
+    const errorMsg = document.getElementById('signupErrorMsg');
+    const successMsg = document.getElementById('signupSuccessMsg');
+    
+    const username = document.getElementById('signup-username').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const confirm = document.getElementById('signup-confirm').value;
+    const role = document.querySelector('input[name="signup-role"]:checked').value;
+    
+    // Clear messages
+    errorMsg.style.display = 'none';
+    successMsg.style.display = 'none';
+    
+    // Client-side validation
+    if (password !== confirm) {
+      errorMsg.innerText = 'Passwords do not match';
+      errorMsg.style.display = 'block';
+      return;
+    }
+    
+    if (password.length < 6) {
+      errorMsg.innerText = 'Password must be at least 6 characters';
+      errorMsg.style.display = 'block';
+      return;
+    }
+    
+    if (username.length < 3) {
+      errorMsg.innerText = 'Username must be at least 3 characters';
+      errorMsg.style.display = 'block';
+      return;
+    }
+    
+    btn.disabled = true;
+    btn.innerText = 'Creating account...';
+    
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password, role })
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        successMsg.innerText = data.message + ' Redirecting...';
+        successMsg.style.display = 'block';
+        setTimeout(() => {
+          window.location.href = data.redirect;
+        }, 1500);
+      } else {
+        errorMsg.innerText = data.error || 'Registration failed';
+        errorMsg.style.display = 'block';
+        btn.disabled = false;
+        btn.innerText = 'Create Account';
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      errorMsg.innerText = 'Network error. Please try again.';
+      errorMsg.style.display = 'block';
+      btn.disabled = false;
+      btn.innerText = 'Create Account';
+    }
+  });
+</script>
+</body>
+</html>

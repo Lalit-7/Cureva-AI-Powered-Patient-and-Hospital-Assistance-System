@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Hospitals - Cureva</title>
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        #map {
+            height: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hospital-card {
+            border-left: 4px solid #14b8a6;
+            transition: all 0.3s ease;
+        }
+        
+        .hospital-card:hover {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .hospital-card.active {
+            border-left-color: #0891b2;
+            background-color: #f0f9ff;
+        }
+        
+        .specialty-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        
+        .distance-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #14b8a6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .icon-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-button:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <div class="bg-white border-b border-gray-200 sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Nearby Hospitals</h1>
+                    <p class="text-gray-600 text-sm mt-1">Find medical facilities near you</p>
+                </div>
+                <a href="/patient" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Info Section -->
+            <div class="info-section" id="infoSection">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold mb-2">Location-Based Hospital Search</h2>
+                        <p class="text-sm opacity-90">Enable location access to find hospitals near you. We'll show you 3-5 nearby hospitals with their specialties, distance, and contact information.</p>
+                    </div>
+                    <button onclick="requestLocationAndSearch()" class="px-6 py-3 bg-white text-teal-600 font-bold rounded-lg hover:bg-gray-100 transition ml-4">
+                        📍 Find Hospitals
+                    </button>
+                </div>
+            </div>
+
+            <!-- Map Container -->
+            <div class="mb-8">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div id="mapContainer" class="hidden">
+                        <div id="map"></div>
+                    </div>
+                    <div id="mapPlaceholder" class="p-12 text-center">
+                        <div class="text-gray-400 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 mb-4">Click "Find Hospitals" to enable location and see nearby hospitals on the map</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospitals List -->
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Nearby Hospitals</h2>
+                    
+                    <!-- Loading State -->
+                    <div id="loadingState" class="hidden bg-white rounded-lg p-8">
+                        <div class="flex flex-col items-center justify-center">
+                            <div class="loading-spinner mb-4"></div>
+                            <p class="text-gray-600">Searching for nearby hospitals...</p>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="hidden bg-white rounded-lg p-8 text-center">
+                        <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-600 mb-2">No hospitals found in your area</p>
+                        <p class="text-gray-500 text-sm">Try expanding your search radius or moving to a different location</p>
+                    </div>
+
+                    <!-- Hospitals Cards -->
+                    <div id="hospitalsContainer" class="space-y-4">
+                        <!-- Hospital cards will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    
+    <!-- Custom Maps JS -->
+    <script src="/static/js/maps.js"></script>
+    
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Hospitals page loaded');
+            
+            // Check if there's a specialty from the analysis page
+            const specialty = sessionStorage.getItem('medicalSpecialty');
+            if (specialty) {
+                console.log('Medical specialty found:', specialty);
+                sessionStorage.removeItem('medicalSpecialty'); // Clear for next time
+                
+                // Auto-request location with specialty
+                autoSearchWithSpecialty(specialty);
+            }
+        });
+        
+        function autoSearchWithSpecialty(specialty) {
+            const infoSection = document.getElementById('infoSection');
+            const loadingState = document.getElementById('loadingState');
+            const mapPlaceholder = document.getElementById('mapPlaceholder');
+            const mapContainer = document.getElementById('mapContainer');
+            
+            // Show loading state
+            infoSection.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+            
+            // Request geolocation
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                loadingState.classList.add('hidden');
+                infoSection.classList.remove('hidden');
+                return;
+            }
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    console.log('User location:', latitude, longitude);
+                    console.log('Searching with specialty:', specialty);
+                    
+                    // Initialize map
+                    initializeMap(latitude, longitude);
+                    
+                    // Fetch nearby hospitals with specialty
+                    fetchNearbyHospitals(latitude, longitude, specialty);
+                    
+                    // Show map
+                    mapContainer.classList.remove('hidden');
+                    mapPlaceholder.classList.add('hidden');
+                },
+                function(error) {
+                    console.error('Geolocation error:', error);
+                    loadingState.classList.add('hidden');
+                    infoSection.classList.remove('hidden');
+                }
+            );
+        }
+    </script>
+</body>
+</html>

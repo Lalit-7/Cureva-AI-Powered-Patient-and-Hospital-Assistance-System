@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile | Cureva</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <a href="/" class="sidebar-logo">Cureva</a>
+
+    <nav class="sidebar-menu">
+      <a href="/patient">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="/patient/history">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        History
+      </a>
+      <a href="/patient/messages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+      </a>
+      <a href="/patient/hospitals">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Hospitals
+      </a>
+      <a class="active" href="/patient/profile">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="avatar">👤</div>
+      <div>
+        <strong id="userName">John Patient</strong>
+        <p id="userEmail">john@email.com</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main-content">
+
+    <header class="page-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button class="sidebar-toggle-btn" id="sidebarToggle" title="Toggle sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+        <h1>My Profile</h1>
+        <p>Manage your account information</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="logoutBtn" class="btn-secondary" style="gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT GRID -->
+    <div class="content-grid">
+      
+      <!-- Profile Card -->
+      <div class="card" style="padding: 32px; max-width: 600px;">
+        
+        <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 36px; padding-bottom: 24px; border-bottom: 1px solid var(--border-light);">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-soft), var(--accent-soft)); display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0;">
+            👤
+          </div>
+          <div>
+            <h2 style="font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 0 0 4px 0;" id="displayName">John Patient</h2>
+            <p style="color: var(--text-muted); margin: 0; font-size: 14px;">Patient Account</p>
+          </div>
+        </div>
+
+        <!-- Profile Fields -->
+        <form id="profileForm" style="display: flex; flex-direction: column; gap: 24px;">
+          
+          <!-- Name Field -->
+          <div>
+            <label style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 14px;">Full Name</label>
+            <input type="text" id="nameInput" placeholder="Your name" style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; outline: none; transition: all var(--duration) var(--ease); background: var(--bg-body);" />
+          </div>
+
+          <!-- Email Field (Read-only) -->
+          <div>
+            <label style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 14px;">Email Address</label>
+            <input type="email" id="emailInput" placeholder="your@email.com" style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; outline: none; background: var(--bg-body); cursor: not-allowed;" readonly />
+            <p style="font-size: 12px; color: var(--text-muted); margin: 6px 0 0 0;">Email cannot be changed on this page.</p>
+          </div>
+
+          <!-- Role Field (Read-only) -->
+          <div>
+            <label style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 14px;">Account Type</label>
+            <input type="text" id="roleInput" placeholder="Patient" style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; outline: none; background: var(--bg-body); cursor: not-allowed;" readonly />
+          </div>
+
+          <!-- Member Since -->
+          <div>
+            <label style="display: block; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 14px;">Member Since</label>
+            <input type="text" id="joinedInput" placeholder="Date" style="width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; outline: none; background: var(--bg-body); cursor: not-allowed;" readonly />
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display: flex; gap: 12px; margin-top: 16px;">
+            <button type="button" id="saveBtn" style="flex: 1; padding: 12px 24px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: all var(--duration) var(--ease); box-shadow: 0 2px 8px rgba(26, 111, 160, 0.25);" onclick="saveProfile()">
+              Save Changes
+            </button>
+            <button type="button" onclick="window.history.back()" style="flex: 1; padding: 12px 24px; background: var(--bg-body); color: var(--text-secondary); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: all var(--duration) var(--ease);">
+              Cancel
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Account Info -->
+        <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--border-light);">
+          <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Account Information</h3>
+          <div style="background: var(--bg-body); padding: 16px; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary);">Consultations completed:</span>
+              <strong style="color: var(--text-primary);">12</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary);">Cases referred to hospitals:</span>
+              <strong style="color: var(--text-primary);">5</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary);">Account status:</span>
+              <strong style="color: #10b981;">Active</strong>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+  // Load user data
+  function loadProfile() {
+    const user = {
+      name: localStorage.getItem('userName') || 'John Patient',
+      email: localStorage.getItem('userEmail') || 'john@email.com',
+      role: 'Patient',
+      joined: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    };
+
+    document.getElementById('displayName').textContent = user.name;
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('nameInput').value = user.name;
+    document.getElementById('emailInput').value = user.email;
+    document.getElementById('roleInput').value = user.role;
+    document.getElementById('joinedInput').value = user.joined;
+  }
+
+  // Save profile
+  function saveProfile() {
+    const name = document.getElementById('nameInput').value.trim();
+    
+    if (!name) {
+      alert('Please enter your name');
+      return;
+    }
+
+    localStorage.setItem('userName', name);
+    document.getElementById('displayName').textContent = name;
+    document.getElementById('userName').textContent = name;
+    
+    // Show success message
+    const btn = document.getElementById('saveBtn');
+    const originalText = btn.textContent;
+    btn.textContent = '✅ Saved!';
+    btn.style.background = '#10b981';
+    
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+    }, 2000);
+  }
+
+  // Logout
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    window.location.href = '/';
+  });
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', loadProfile);
+
+  // Sidebar toggle
+  document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+  });
+  document.getElementById('sidebarOverlay')?.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+/* ================================================
+   CUREVA — DESIGN SYSTEM
+   Premium Healthcare UI — Icy Blue-White Palette
+   ================================================ */
+
+/* ---------- PALETTE & TOKENS ---------- */
+:root {
+  /* Primary — Soft Steel Blue */
+  --primary: #3d8bb5;
+  --primary-dark: #2a6d91;
+  --primary-light: #5ba3cc;
+  --primary-soft: #e4f0f8;
+  --primary-ghost: #f0f6fb;
+
+  /* Accent — Muted Teal */
+  --accent: #4db0a8;
+  --accent-dark: #3a9189;
+  --accent-soft: #e2f5f3;
+
+  /* Neutrals */
+  --text-primary: #101d2f;
+  --text-secondary: #3e5060;
+  --text-muted: #7e92a4;
+  --text-light: #a5b5c4;
+
+  /* Surfaces — glass-first approach */
+  --bg-body: #f3f7fb;
+  --bg-surface: rgba(255, 255, 255, 0.88);
+  --bg-elevated: rgba(255, 255, 255, 0.95);
+  --bg-inset: #edf2f8;
+  --bg-hover: #eaf0f7;
+
+  /* Glass tokens */
+  --glass-bg: rgba(255, 255, 255, 0.68);
+  --glass-bg-strong: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-border-subtle: rgba(180, 200, 220, 0.25);
+  --glass-blur: blur(20px);
+
+  /* Borders */
+  --border: #d6e0ea;
+  --border-light: #e6ecf2;
+  --border-focus: var(--primary-light);
+
+  /* Status — refined, softer */
+  --success: #2d9f5f;
+  --success-soft: #e2f5eb;
+  --warning: #c88420;
+  --warning-soft: #fdf3e0;
+  --danger: #c53a3a;
+  --danger-soft: #fce8e8;
+  --info: #3574d4;
+  --info-soft: #e3eefb;
+
+  /* Shadows — diffuse, never harsh */
+  --shadow-xs: 0 1px 2px rgba(80, 110, 140, 0.04);
+  --shadow-sm: 0 1px 4px rgba(80, 110, 140, 0.06);
+  --shadow-md: 0 4px 20px rgba(80, 110, 140, 0.07);
+  --shadow-lg: 0 8px 40px rgba(80, 110, 140, 0.09);
+  --shadow-xl: 0 16px 56px rgba(80, 110, 140, 0.11);
+  --shadow-glass: 0 8px 32px rgba(100, 140, 170, 0.06);
+  --shadow-card-hover: 0 12px 44px rgba(80, 120, 155, 0.12);
+
+  /* Radii — generous, premium */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration: 0.25s;
+  --duration-slow: 0.4s;
+}
+
+/* ---------- RESET ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 14.5px;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--duration) var(--ease);
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+/* ---------- LAYOUT ---------- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ---------- TYPOGRAPHY ---------- */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.22;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 2.75rem; letter-spacing: -0.03em; font-weight: 800; }
+h2 { font-size: 2rem; letter-spacing: -0.025em; }
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.125rem; }
+
+.muted {
+  color: var(--text-muted);
+  font-size: 13.5px;
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes softGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(61, 139, 181, 0); }
+  50% { box-shadow: 0 0 20px rgba(61, 139, 181, 0.08); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s var(--ease) both;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s var(--ease) both;
+}
+
+/* ---------- GLASS UTILITIES ---------- */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border-subtle);
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+}
+
+/* ---------- FORM ELEMENTS ---------- */
+input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]),
+textarea,
+select {
+  transition: all var(--duration) var(--ease);
+  border-color: var(--border);
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3.5px rgba(61, 139, 181, 0.1);
+}
+
+input:hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus),
+select:hover:not(:disabled):not(:focus) {
+  border-color: var(--border-focus);
+}
+
+/* ---------- SCROLLBAR ---------- */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 170, 190, 0.3);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(130, 150, 170, 0.5);
+}

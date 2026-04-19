@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Hospitals — Cureva</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .min-h-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ---- TOPBAR ---- */
+        .topbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+        }
+
+        .topbar-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .title { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 2px; }
+        .subtitle { color: var(--text-muted); font-size: 13px; }
+
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 18px; border-radius: var(--radius-sm);
+            background: var(--bg-surface); color: var(--text-secondary);
+            text-decoration: none; font-weight: 600; font-size: 14px;
+            border: 1.5px solid var(--border); transition: all var(--duration) var(--ease);
+        }
+        .btn-back:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-ghost); }
+
+        .hidden { display: none !important; }
+
+        /* ---- SPLIT LAYOUT: Map + List ---- */
+        .content-split {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .map-panel {
+            flex: 1;
+            position: relative;
+            min-width: 0;
+        }
+
+        #mapContainer { position: absolute; inset: 0; }
+        #map { width: 100% !important; height: 100% !important; }
+
+        .list-panel {
+            width: 380px;
+            background: var(--bg-surface);
+            border-left: 1px solid var(--border-light);
+            overflow-y: auto;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .list-panel-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-surface);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .list-panel-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .list-panel-header p { font-size: 12px; color: var(--text-muted); }
+
+        #hospitalList { padding: 12px; flex: 1; overflow-y: auto; }
+
+        /* ---- Hospital Cards ---- */
+        .hospital-card {
+            background: white;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.25s var(--ease);
+        }
+        .hospital-card:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(26, 111, 160, 0.1); }
+        .hospital-card.active { border-color: var(--primary); background: var(--primary-ghost); }
+
+        .hospital-card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+        .hospital-number {
+            width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
+        }
+        .hospital-card-info h3 { font-size: 14px; font-weight: 700; color: var(--text-primary); line-height: 1.3; margin: 0; }
+        .hospital-distance { font-size: 12px; color: var(--primary); font-weight: 600; }
+
+        .hospital-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+        .tag {
+            font-size: 11px; font-weight: 600; padding: 3px 10px;
+            border-radius: var(--radius-pill); display: inline-block;
+        }
+        .tag-specialty { background: var(--primary-soft); color: var(--primary); }
+        .match-best { background: #dcfce7; color: #15803d; }
+        .match-good { background: #fef3c7; color: #92400e; }
+        .match-general { background: #f1f5f9; color: #64748b; }
+
+        .hospital-phone { font-size: 12px; color: var(--text-secondary); margin: 4px 0 8px; }
+
+        /* ---- Send Case Button ---- */
+        .btn-send-case-card {
+            width: 100%; padding: 10px 16px; border: none;
+            border-radius: var(--radius-sm); font-size: 13px; font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; cursor: pointer; transition: all 0.25s var(--ease);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .btn-send-case-card:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35); }
+        .btn-send-case-card.sent {
+            background: #10b981; cursor: default; pointer-events: none;
+        }
+
+        .no-case-warning {
+            background: #fefce8; border: 1px solid #fde68a; border-radius: var(--radius-md);
+            padding: 14px; margin-bottom: 12px; font-size: 13px; color: #92400e; line-height: 1.5;
+        }
+        .no-case-warning p { margin: 0 0 8px; }
+        .btn-back-sm {
+            display: inline-block; padding: 6px 14px; background: white;
+            border: 1px solid #fbbf24; border-radius: var(--radius-sm);
+            color: #92400e; font-weight: 600; font-size: 12px; text-decoration: none;
+        }
+
+        .filter-badge {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border: 1px solid #667eea30; border-radius: var(--radius-md);
+            padding: 10px 14px; margin-bottom: 12px; font-size: 13px; color: #4c3a99;
+        }
+
+        /* ---- Overlays ---- */
+        .overlay {
+            position: absolute; inset: 0; display: flex;
+            align-items: center; justify-content: center; z-index: 999;
+            background: rgba(15, 30, 46, 0.45); backdrop-filter: blur(4px);
+        }
+        .overlay.hidden { display: none !important; }
+
+        .card-overlay {
+            background: var(--bg-surface); border-radius: var(--radius-lg);
+            padding: 32px; width: min(92vw, 440px);
+            box-shadow: var(--shadow-xl); border: 1px solid var(--border-light);
+        }
+        .card-overlay-title { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
+        .card-overlay-text { color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin-bottom: 20px; }
+
+        .btn-primary {
+            width: 100%; border: none; border-radius: var(--radius-sm);
+            padding: 13px 20px; font-size: 15px; font-weight: 700; color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            cursor: pointer; transition: all var(--duration) var(--ease);
+            box-shadow: 0 2px 8px rgba(26, 111, 160, 0.25);
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26, 111, 160, 0.35); }
+
+        .privacy-note { margin-top: 12px; color: var(--text-muted); font-size: 12px; text-align: center; line-height: 1.5; }
+
+        .loading-spinner {
+            border: 4px solid var(--border-light); border-top: 4px solid var(--primary);
+            border-radius: 50%; width: 44px; height: 44px;
+            animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text { color: var(--text-secondary); font-size: 15px; font-weight: 600; text-align: center; }
+
+        .error-icon { width: 56px; height: 56px; margin: 0 auto 12px; color: var(--text-light); }
+
+        /* ---- Success Toast ---- */
+        .success-toast {
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; background: white; border: 1.5px solid #10b981;
+            border-radius: var(--radius-lg); padding: 18px 28px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            transition: bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 440px; width: 90%;
+        }
+        .success-toast.show { bottom: 32px; }
+        
+        /* ---- Error Toast ---- */
+        .error-toast {
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; background: white; border: 1.5px solid #ef4444;
+            border-radius: var(--radius-lg); padding: 18px 28px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+            transition: bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 440px; width: 90%;
+        }
+        .error-toast.show { bottom: 32px; }
+        .error-toast .toast-content strong { color: #dc2626; }
+        
+        .toast-content { display: flex; align-items: flex-start; gap: 12px; }
+        .toast-icon { font-size: 24px; line-height: 1; }
+        .toast-content strong { font-size: 15px; color: #047857; display: block; margin-bottom: 4px; }
+        .toast-content p { font-size: 13px; color: var(--text-secondary); margin: 0; }
+
+        /* ---- Leaflet popup styling ---- */
+        .leaflet-popup-content-wrapper {
+            background: var(--bg-surface) !important;
+            border-radius: var(--radius-md) !important;
+            box-shadow: var(--shadow-lg) !important;
+            border: 1px solid var(--border-light) !important;
+            padding: 0 !important;
+        }
+        .leaflet-popup-content { margin: 0 !important; max-width: 320px; padding: 0 !important; }
+        .leaflet-popup-close-button { top: 10px !important; right: 10px !important; font-size: 18px !important; color: var(--text-muted) !important; }
+
+        .hospital-popup { padding: 18px; font-family: 'Inter', sans-serif; }
+        .hospital-popup h3 { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; padding-right: 20px; line-height: 1.35; }
+        .hospital-popup .info-row { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px; }
+        .hospital-popup .distance { font-weight: 600; color: var(--primary); background: var(--primary-soft); padding: 3px 10px; border-radius: var(--radius-sm); display: inline-block; }
+        .hospital-popup .actions { display: flex; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+        .hospital-popup .btn {
+            flex: 1; padding: 8px 12px; border: none; border-radius: var(--radius-sm);
+            font-size: 12px; font-weight: 600; cursor: pointer; text-align: center;
+            text-decoration: none; display: inline-flex; align-items: center;
+            justify-content: center; transition: all 0.2s var(--ease);
+        }
+        .hospital-popup .btn-directions { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+        .hospital-popup .btn-directions:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26, 111, 160, 0.3); }
+        .hospital-popup .btn-send-case { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .hospital-popup .btn-send-case:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
+
+        /* ---- Responsive ---- */
+        @media (max-width: 900px) {
+            .content-split { flex-direction: column-reverse; }
+            .list-panel { width: 100%; height: 45%; border-left: none; border-top: 1px solid var(--border-light); }
+            .map-panel { height: 55%; }
+        }
+
+        @media (max-width: 700px) {
+            .topbar-inner { flex-direction: column; align-items: flex-start; }
+            .title { font-size: 1.2rem; }
+            .btn-back { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen">
+        <!-- Header -->
+        <div class="topbar">
+            <div class="topbar-inner">
+                <div>
+                    <a href="/" class="sidebar-logo" style="display: inline-block; margin-bottom: 6px;">Cureva</a>
+                    <h1 class="title">Nearby Hospitals</h1>
+                    <p class="subtitle">Select a hospital and send your case for review</p>
+                </div>
+                <a href="/patient" class="btn-back">← Back to Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Split Layout: Map + Hospital List -->
+        <div class="content-split">
+            <!-- Map Panel -->
+            <div class="map-panel" id="mapWrapper">
+                <div id="mapContainer" class="hidden">
+                    <div id="map"></div>
+                </div>
+
+                <!-- Info Overlay -->
+                <div id="infoSection" class="overlay">
+                    <div class="card-overlay">
+                        <h2 class="card-overlay-title">Find Hospitals Near You</h2>
+                        <p class="card-overlay-text">
+                            We'll find nearby hospitals filtered by your medical needs, displayed on an interactive map. Select one to send your case.
+                        </p>
+                        <button onclick="requestLocationAndSearch()" class="btn-primary">
+                            📍 Enable Location & Find Hospitals
+                        </button>
+                        <p class="privacy-note">Your location is used only to find nearby hospitals. Privacy protected.</p>
+                    </div>
+                </div>
+
+                <!-- Loading Overlay -->
+                <div id="loadingState" class="overlay hidden">
+                    <div class="card-overlay" style="text-align: center;">
+                        <div class="loading-spinner"></div>
+                        <p class="loading-text">Searching for nearby hospitals...</p>
+                    </div>
+                </div>
+
+                <!-- Empty Overlay -->
+                <div id="emptyState" class="overlay hidden">
+                    <div class="card-overlay" style="text-align: center;">
+                        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="loading-text" style="margin-bottom: 8px;">No hospitals found nearby</p>
+                        <p class="card-overlay-text">Try expanding the search radius.</p>
+                        <button onclick="requestLocationAndSearch()" class="btn-primary">Try Again</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospital List Panel -->
+            <div class="list-panel">
+                <div class="list-panel-header">
+                    <h2>🏥 Hospital Results</h2>
+                    <p>Click a hospital to view on map. Send your case for review.</p>
+                </div>
+                <div id="hospitalList">
+                    <div style="padding: 40px 20px; text-align: center; color: var(--text-muted);">
+                        <p>Enable location to see nearby hospitals</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="/static/js/maps.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Hospitals page loaded');
+
+            const specialty = sessionStorage.getItem('medicalSpecialty');
+            if (specialty) {
+                console.log('Medical specialty found:', specialty);
+                // Don't remove yet — maps.js will use it
+                autoSearchWithSpecialty(specialty);
+            }
+        });
+
+        function autoSearchWithSpecialty(specialty) {
+            const infoSection = document.getElementById('infoSection');
+            const loadingState = document.getElementById('loadingState');
+            const mapContainer = document.getElementById('mapContainer');
+
+            infoSection.classList.add('hidden');
+            loadingState.classList.remove('hidden');
+
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                loadingState.classList.add('hidden');
+                infoSection.classList.remove('hidden');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    mapContainer.classList.remove('hidden');
+                    infoSection.classList.add('hidden');
+
+                    // Delay init to let container layout finish
+                    setTimeout(() => {
+                        initializeMap(latitude, longitude);
+                        fetchNearbyHospitals(latitude, longitude, specialty);
+                    }, 150);
+                },
+                function(error) {
+                    console.error('Geolocation error:', error);
+                    loadingState.classList.add('hidden');
+                    infoSection.classList.remove('hidden');
+                }
+            );
+        }
+    </script>
+</body>
+</html>
