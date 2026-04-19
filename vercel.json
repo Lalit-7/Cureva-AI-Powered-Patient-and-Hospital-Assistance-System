@@ -1,8 +1,8 @@
 {
-  "projectSettings": {
-    "pythonVersion": "3.11"
-  },
   "framework": "python",
+  "python": {
+    "version": "3.11"
+  },
   "builds": [
     {
       "src": "api/index.py",
@@ -20,24 +20,5 @@
       "src": "/(.*)",
       "dest": "api/index.py"
     }
-  ],
-  "env": {
-    "FLASK_ENV": "production",
-    "FLASK_DEBUG": "0",
-    "PYTHONUNBUFFERED": "1"
-  },
-  "envs": {
-    "production": {
-      "FLASK_ENV": "production",
-      "FLASK_DEBUG": "0",
-      "PYTHONUNBUFFERED": "1"
-    },
-    "development": {
-      "FLASK_ENV": "development",
-      "FLASK_DEBUG": "1",
-      "PYTHONUNBUFFERED": "1"
-    }
-  },
-  "buildCommand": "pip install -r requirements.txt",
-  "outputDirectory": "instance"
+  ]
 }
