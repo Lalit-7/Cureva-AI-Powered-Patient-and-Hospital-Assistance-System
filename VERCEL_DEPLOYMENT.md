@@ -1,19 +1,46 @@
 # 🚀 Cureva - Vercel Deployment Guide
 
+## 🔧 Recent Fixes (April 2026)
+
+The following critical issues have been fixed to resolve `FUNCTION_INVOCATION_FAILED` errors:
+
+1. **Improved Serverless Entry Point** (`api/index.py`)
+   - Added proper error handling with fallback app
+   - Better error messages for debugging
+   - Ensures Flask app imports correctly
+
+2. **Enhanced Database Initialization** (`app.py`)
+   - Better error handling for database initialization
+   - Improved logging for troubleshooting
+   - More informative error messages on startup
+
+3. **Updated Vercel Configuration** (`vercel.json`)
+   - Added `installCommand` to ensure dependencies are installed
+   - Set production environment variables
+   - Better timeout and memory configuration
+
+4. **Added Health Check Endpoint** (`app.py`)
+   - `/health` endpoint for Vercel monitoring
+   - Helps diagnose deployment issues
+   - Can be used for uptime monitoring
+
 ## Environment Variables Setup
 
 Before deploying to Vercel, ensure these environment variables are configured in your Vercel Project Settings:
 
 ```env
-# Required Environment Variables
+# REQUIRED Environment Variables
 GOOGLE_API_KEY=your_google_gemini_api_key_here
 GEMINI_API_KEY=your_google_gemini_api_key_here
 SECRET_KEY=your_flask_secret_key_here
+DATABASE_URL=postgresql://user:password@host:port/database
 
 # Optional (Vercel sets these automatically)
 FLASK_ENV=production
 FLASK_DEBUG=0
 ```
+
+**⚠️ CRITICAL**: All environment variables must be set in Vercel Project Settings → Environment Variables
 
 ## Deployment Steps
 
@@ -157,19 +184,85 @@ project/
 - [ ] Error logging configured
 - [ ] Monitoring set up in Vercel dashboard
 
-## Post-Deployment
+## 🆘 Troubleshooting Common Errors
 
-### Monitor Performance
-- Check Vercel Dashboard for function execution time
-- Monitor API usage for Gemini and Overpass
-- Watch for cold start times
+### Error: `FUNCTION_INVOCATION_FAILED` (500 Internal Server Error)
 
-### Handle Common Issues
+**Causes & Solutions:**
 
-**Static Files Not Loading**
+1. **Missing Environment Variables**
+   - ✅ Check Vercel Project Settings → Environment Variables
+   - ✅ Ensure `GOOGLE_API_KEY`, `GEMINI_API_KEY`, `SECRET_KEY` are set
+   - ✅ Test with `/health` endpoint to check if app initialized
+
+2. **Database Connection Issues**
+   - ✅ Verify `DATABASE_URL` is set and valid (PostgreSQL required in production)
+   - ✅ SQLite won't work on Vercel (ephemeral filesystem)
+   - ✅ Use Render.com or similar for PostgreSQL hosting
+
+3. **Python Dependency Issues**
+   - ✅ Run `pip install -r requirements.txt` locally to test
+   - ✅ Check that all imports in `app.py` are available
+   - ✅ Verify Python 3.11 compatibility
+
+4. **Import/Module Errors**
+   - ✅ Check Vercel build logs for import errors
+   - ✅ Verify relative imports in `api/index.py` are correct
+   - ✅ Ensure models and services can be imported
+
+5. **API Keys Invalid**
+   - ✅ Verify Google Gemini API key is active
+   - ✅ Check API quotas and rate limits
+   - ✅ Ensure keys haven't been revoked
+
+### Error: Static Files Return 404
+
 ```python
-# Update Flask to serve static files correctly
+# Ensure static files configuration in app.py
 app = Flask(__name__, static_folder='static', static_url_path='/static')
+```
+
+### Error: Database Initialization Hangs
+
+- Reduce connection timeout in SQLAlchemy config
+- Use connection pooling for better performance
+- Consider serverless-friendly database (MongoDB, Firebase)
+
+### Error: Cold Start Too Slow
+
+- Optimize dependencies (remove unused packages)
+- Consider increasing Lambda memory to 1536 MB or higher
+- Use reserved concurrency in Vercel for critical endpoints
+
+## Testing Before Deployment
+
+```bash
+# Test locally with production-like environment
+export FLASK_ENV=production
+export FLASK_DEBUG=0
+export GOOGLE_API_KEY=your_key_here
+export GEMINI_API_KEY=your_key_here
+export SECRET_KEY=your_secret_here
+python -m pip install -r requirements.txt
+python app.py
+
+# Test the health endpoint
+curl http://localhost:5000/health
+```
+
+## Health Check URL
+
+After deployment, monitor your application health:
+```
+https://your-app.vercel.app/health
+```
+
+This should return:
+```json
+{
+  "status": "healthy",
+  "service": "Cureva AI"
+}
 ```
 
 **Database Connection Timeout**

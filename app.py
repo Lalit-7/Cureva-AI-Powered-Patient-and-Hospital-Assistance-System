@@ -51,13 +51,24 @@ def verify_password(password, hashed_password):
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
-    # Production: PostgreSQL from Render
+    # Production: PostgreSQL from Render or other providers
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    print("✅ Using PostgreSQL database from DATABASE_URL")
 else:
-    # Development: Local SQLite
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/health_tech.db'
+    # Development: Local SQLite - Use temp directory to avoid OneDrive sync issues
+    import tempfile
+    db_dir = os.path.join(tempfile.gettempdir(), 'cureva_app')
+    os.makedirs(db_dir, exist_ok=True)
+    db_path = os.path.join(db_dir, 'health_tech.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+    print(f"📁 Using SQLite database at: {db_path}")
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Suppress SQLAlchemy warnings in production
+import warnings
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+
 db.init_app(app)
 
 # Initialize database only once (on first request or app startup)
@@ -96,7 +107,9 @@ def init_db():
                 
                 app.db_initialized = True
         except Exception as e:
-            print(f"⚠️ Database initialization warning: {str(e)}")
+            import traceback
+            print(f"⚠️ Database initialization warning: {str(e)}", file=sys.stderr)
+            print(traceback.format_exc(), file=sys.stderr)
             # Don't crash if DB initialization fails, allow the app to continue
             app.db_initialized = True
 
@@ -138,6 +151,15 @@ def role_required(role):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
+
+# ==================== HEALTH CHECK ====================
+@app.route("/health", methods=["GET"])
+def health_check():
+    """Health check endpoint for Vercel and monitoring"""
+    try:
+        return jsonify({"status": "healthy", "service": "Cureva AI"}), 200
+    except Exception as e:
+        return jsonify({"status": "unhealthy", "error": str(e)}), 500
 
 # ==================== AUTH API ====================
 @app.route("/api/auth/login", methods=["POST"])
