@@ -1,5 +1,6 @@
 /* ================================================
    CUREVA — DASHBOARD STYLES
+   Organic Intelligence Design System
    Sidebar, Chat, AI Responses, History, Hospital
    ================================================ */
 
@@ -23,9 +24,11 @@
 }
 
 .sidebar-logo {
+  font-family: var(--font-serif);
   font-size: 22px;
-  font-weight: 800;
-  color: var(--primary);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
   margin-bottom: 36px;
   padding: 0 8px;
@@ -51,8 +54,10 @@
   padding: 11px 14px;
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
+  font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
+  letter-spacing: 0.01em;
   transition: all var(--duration) var(--ease);
   position: relative;
 }
@@ -132,14 +137,18 @@
 }
 
 .page-header h1 {
+  font-family: var(--font-serif);
   font-size: 1.5rem;
   font-weight: 700;
 }
 
 .page-header p {
   color: var(--text-muted);
-  font-size: 14px;
-  margin-top: 2px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 10px;
+  margin-top: 4px;
 }
 
 .header-actions {
@@ -306,14 +315,19 @@
 }
 
 .chat-input-bar button:last-child {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: var(--primary);
   color: #fff;
   padding: 10px 20px;
-  box-shadow: 0 2px 8px rgba(26, 111, 160, 0.2);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
 }
 
 .chat-input-bar button:last-child:hover:not(:disabled) {
-  box-shadow: 0 4px 14px rgba(26, 111, 160, 0.35);
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-indigo-glow);
   transform: translateY(-1px);
 }
 
@@ -326,7 +340,7 @@
 
 /* ==================== CHAT MESSAGES ==================== */
 .chat-message-user {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: var(--primary);
   color: #ffffff;
   padding: 12px 16px;
   border-radius: var(--radius-md) var(--radius-md) 4px var(--radius-md);
@@ -334,8 +348,9 @@
   max-width: 70%;
   margin-left: auto;
   font-size: 14px;
+  font-family: var(--font-sans);
   line-height: 1.55;
-  box-shadow: 0 2px 8px rgba(26, 111, 160, 0.15);
+  box-shadow: 0 2px 12px rgba(67, 56, 202, 0.2);
   animation: fadeIn 0.3s var(--ease);
 }
 
@@ -361,6 +376,7 @@
 
 /* ==================== AI RESPONSE SECTIONS ==================== */
 .ai-response-header {
+  font-family: var(--font-serif);
   font-size: 15px;
   font-weight: 700;
   color: var(--primary);
@@ -382,7 +398,10 @@
 
 .ai-response-section h4 {
   margin: 0 0 8px 0;
-  font-size: 14px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -459,7 +478,7 @@
 
 /* ==================== HOSPITAL DASHBOARD ==================== */
 .sidebar.dark {
-  background: #0c1829;
+  background: var(--bg-dark);
   border-color: rgba(255, 255, 255, 0.06);
 }
 
@@ -523,17 +542,19 @@
 }
 
 .stat-card h4 {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   margin-bottom: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.3em;
 }
 
 .stat-card h2 {
+  font-family: var(--font-serif);
   font-size: 1.75rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
@@ -717,6 +738,7 @@
 
 .conversation-card-header h3 {
   margin: 0;
+  font-family: var(--font-serif);
   font-size: 14px;
   font-weight: 600;
   color: var(--text-primary);
@@ -796,6 +818,7 @@
 
 .detail-header-top h2 {
   margin: 0;
+  font-family: var(--font-serif);
   font-size: 1.35rem;
   font-weight: 700;
   color: var(--text-primary);
@@ -846,13 +869,13 @@
 }
 
 .message-user .message-content {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: var(--primary);
   color: #ffffff;
   padding: 12px 16px;
   border-radius: var(--radius-md) var(--radius-md) 4px var(--radius-md);
   max-width: 70%;
   word-wrap: break-word;
-  box-shadow: 0 2px 8px rgba(26, 111, 160, 0.15);
+  box-shadow: 0 2px 12px rgba(67, 56, 202, 0.2);
 }
 
 .message-user .message-content p {
@@ -902,7 +925,10 @@
 
 .response-section h4 {
   margin: 0 0 6px 0;
-  font-size: 13px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -1008,15 +1034,16 @@
 
 .chat-history-header h3 {
   margin: 0;
+  font-family: var(--font-serif);
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .btn-new-chat {
   width: 32px;
   height: 32px;
   border: none;
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: var(--primary);
   color: white;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -1029,7 +1056,7 @@
 
 .btn-new-chat:hover {
   transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(26, 111, 160, 0.3);
+  box-shadow: var(--shadow-indigo-glow);
 }
 
 .chat-history-list {
@@ -1185,6 +1212,7 @@
 }
 
 .modal-header h2 {
+  font-family: var(--font-serif);
   font-size: 1.25rem;
   margin: 0;
 }
@@ -1219,10 +1247,11 @@
 }
 
 .modal-section h3 {
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.3em;
   margin-bottom: 8px;
 }
 

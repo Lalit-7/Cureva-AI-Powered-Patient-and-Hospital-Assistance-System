@@ -5,7 +5,7 @@
   <title>Sign In | Cureva</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
@@ -18,7 +18,7 @@
   <div class="auth-brand">
     <div class="auth-brand-content">
       <a href="/" class="logo">Cureva</a>
-      <h2>AI-Powered Medical Analysis Platform</h2>
+      <h2>AI-Powered Medical<br>Analysis Platform</h2>
       <p>
         Get instant health insights, manage your medical records,
         and find the right specialist — all powered by advanced AI.
@@ -54,12 +54,12 @@
         <p>Sign in to your Cureva account to continue</p>
 
         <form id="loginForm">
-          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text-primary);">Login as:</label>
+          <label style="display:block; margin-bottom:8px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.15em; font-size: 11px; font-weight:600; color:var(--text-secondary);">Login as:</label>
           <div style="display:flex; gap:16px; margin-bottom: 24px;">
-            <label style="display:flex; align-items:center; gap:8px;">
+            <label style="display:flex; align-items:center; gap:8px; font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">
               <input type="radio" name="role" value="patient" checked onchange="updateDemoCreds('patient')"> Patient
             </label>
-            <label style="display:flex; align-items:center; gap:8px;">
+            <label style="display:flex; align-items:center; gap:8px; font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">
               <input type="radio" name="role" value="hospital" onchange="updateDemoCreds('hospital')"> Hospital
             </label>
           </div>
@@ -74,7 +74,7 @@
             <input type="password" id="password" required placeholder="Enter your password" value="demo_password">
           </div>
 
-          <p id="errorMsg" style="color:red; font-size:14px; display:none; margin-bottom:16px;"></p>
+          <p id="errorMsg" style="color:var(--danger); font-size:14px; display:none; margin-bottom:16px;"></p>
 
           <button type="submit" class="btn-primary" id="loginBtn">Sign In</button>
         </form>
@@ -92,12 +92,12 @@
         <p>Join Cureva to get started with AI health analysis</p>
 
         <form id="signupForm">
-          <label style="display:block; margin-bottom:8px; font-weight:600; color:var(--text-primary);">Sign up as:</label>
+          <label style="display:block; margin-bottom:8px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.15em; font-size: 11px; font-weight:600; color:var(--text-secondary);">Sign up as:</label>
           <div style="display:flex; gap:16px; margin-bottom: 24px;">
-            <label style="display:flex; align-items:center; gap:8px;">
+            <label style="display:flex; align-items:center; gap:8px; font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">
               <input type="radio" name="signup-role" value="patient" checked> Patient
             </label>
-            <label style="display:flex; align-items:center; gap:8px;">
+            <label style="display:flex; align-items:center; gap:8px; font-family: var(--font-sans); font-size: 14px; color: var(--text-secondary);">
               <input type="radio" name="signup-role" value="hospital"> Hospital
             </label>
           </div>
@@ -122,8 +122,8 @@
             <input type="password" id="signup-confirm" required placeholder="Confirm your password" minlength="6">
           </div>
 
-          <p id="signupErrorMsg" style="color:red; font-size:14px; display:none; margin-bottom:16px;"></p>
-          <p id="signupSuccessMsg" style="color:green; font-size:14px; display:none; margin-bottom:16px;"></p>
+          <p id="signupErrorMsg" style="color:var(--danger); font-size:14px; display:none; margin-bottom:16px;"></p>
+          <p id="signupSuccessMsg" style="color:var(--success); font-size:14px; display:none; margin-bottom:16px;"></p>
 
           <button type="submit" class="btn-primary" id="signupBtn">Create Account</button>
         </form>

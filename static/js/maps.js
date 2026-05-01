@@ -295,13 +295,29 @@ function renderHospitalList(hospitals, specialty) {
 // SEND CASE TO HOSPITAL (THE KEY ACTION)
 // --------------------------------------------------
 async function sendCaseToHospital(index) {
+    console.log(`📤 [SEND] sendCaseToHospital called with index: ${index}`);
+    
     const hospital = hospitalsData[index];
     if (!hospital) {
+        console.error('❌ Hospital not found at index:', index);
         showErrorToast('Hospital not found');
         return;
     }
+    console.log(`🏥 Sending case to: ${hospital.name}`);
+    
+    // Re-read from sessionStorage each time (in case it was set after page load)
+    try {
+        const raw = sessionStorage.getItem('pendingCaseData');
+        if (raw) {
+            pendingCaseData = JSON.parse(raw);
+            console.log('📋 Loaded pendingCaseData:', pendingCaseData);
+        }
+    } catch (e) {
+        console.warn('Failed to parse pendingCaseData:', e);
+    }
     
     if (!pendingCaseData) {
+        console.error('❌ No pendingCaseData found in sessionStorage');
         showErrorToast('No medical analysis data found. Please go back and analyze your symptoms first.');
         return;
     }
@@ -324,6 +340,7 @@ async function sendCaseToHospital(index) {
     }
     
     try {
+        console.log('📡 Sending POST to /api/cases/send...');
         const response = await fetch('/api/cases/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -338,7 +355,9 @@ async function sendCaseToHospital(index) {
             })
         });
         
+        console.log('📡 Response status:', response.status);
         const data = await response.json();
+        console.log('📡 Response data:', data);
         
         if (data.success) {
             showSuccessToast(hospital.name);
@@ -353,7 +372,8 @@ async function sendCaseToHospital(index) {
                 btn.classList.add('sent');
             }
         } else {
-            showErrorToast('Failed to send case. Please try again.');
+            console.error('❌ Server error:', data.error);
+            showErrorToast(data.error || 'Failed to send case. Please try again.');
             // Reset button on error
             if (btn) {
                 btn.disabled = false;
@@ -362,7 +382,7 @@ async function sendCaseToHospital(index) {
             }
         }
     } catch (error) {
-        console.error('Error sending case:', error);
+        console.error('❌ Network error sending case:', error);
         showErrorToast('Network error. Please try again.');
         // Reset button on error
         if (btn) {

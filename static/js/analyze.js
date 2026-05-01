@@ -144,9 +144,13 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ==================== ANALYZE ==================== */
   analyzeBtn?.addEventListener("click", async () => {
 
+    // Lazily create conversation on first message
     if (!currentConversationId) {
-      alert("Please wait, setting up the session...");
-      return;
+      const id = await ensureConversation();
+      if (!id) {
+        alert("Failed to create session. Please refresh the page.");
+        return;
+      }
     }
 
     const formData = new FormData();
@@ -261,40 +265,59 @@ document.addEventListener("DOMContentLoaded", () => {
 function initSession() {
   console.log("🔄 [INIT] Starting session initialization...");
   
-  // Always start fresh - clear any saved conversation and create a new one
+  // Do NOT create a conversation yet — wait until user actually sends a message.
+  // This prevents blank "New Chat" entries from piling up in history.
+  currentConversationId = null;
+  isFirstMessage = true;
   clearConversationId();
-  createNewConversation();
-  console.log("✨ [INIT] Fresh chat session created - ready for new analysis");
+  clearChat();
+  updatePageTitle("New Chat");
+  updateDeleteButton(false);
+  console.log("✨ [INIT] Session ready — conversation will be created on first message");
 }
 
-function createNewConversation() {
-  fetch("/api/conversation/new", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title: "New Chat" })
-  })
-  .then(res => res.json())
-  .then(data => {
+async function ensureConversation() {
+  // Creates a conversation only if one doesn't exist yet.
+  // Returns the conversation ID.
+  if (currentConversationId) return currentConversationId;
+
+  try {
+    const res = await fetch("/api/conversation/new", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "New Chat" })
+    });
+    const data = await res.json();
     if (data.success) {
       currentConversationId = data.conversation.id;
       isFirstMessage = true;
       saveConversationId(currentConversationId);
       saveFirstMessageState(true);
-      clearChat();
-      updatePageTitle("New Chat");
-      updateDeleteButton(false);
       console.log(`✅ [CREATE] New conversation created: ${data.conversation.id}`);
+      return currentConversationId;
     }
-  })
-  .catch(err => {
+  } catch (err) {
     console.error("❌ [CREATE] Failed to create conversation:", err);
-  });
+  }
+  return null;
+}
+
+function createNewConversation() {
+  // Reset state — new conversation will be created lazily on next message
+  currentConversationId = null;
+  isFirstMessage = true;
+  clearConversationId();
+  clearChat();
+  updatePageTitle("New Chat");
+  updateDeleteButton(false);
+  console.log("✨ [NEW] Ready for new chat — conversation deferred until first message");
 }
 
 function startFreshChat() {
-  // Called when user deletes current chat — create a brand new one
+  // Called when user deletes current chat — reset for a new one
   createNewConversation();
 }
+
 
 function generateChatTitle(text) {
   if (!text) return "Medical Image Analysis";
@@ -521,11 +544,11 @@ function generateResultHTML(data) {
   }
 
   // Add button for nearby hospitals
-  const specialty = data.suggested_specialties?.[0] || data.suggested_department || '';
+  const specialty = (data.suggested_specialties?.[0] || data.suggested_department || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
   html += `
-    <div class="ai-response-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; padding: 16px; text-align: center;">
-      <p style="color: rgba(255,255,255,0.9); margin: 0 0 10px 0; font-size: 13px;">Find a relevant hospital and send your case for review</p>
-      <button onclick="navigateToHospitals('${escapeHtml(specialty)}', this)" style="background: white; color: #667eea; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;">
+    <div class="ai-response-section" style="background: var(--primary); border-radius: 12px; padding: 16px; text-align: center;">
+      <p style="color: rgba(255,255,255,0.85); margin: 0 0 10px 0; font-size: 13px; font-family: var(--font-sans);">Find a relevant hospital and send your case for review</p>
+      <button onclick="navigateToHospitals('${specialty}')" style="background: white; color: var(--primary); border: none; padding: 10px 24px; border-radius: 999px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px;">
         🏥 View Nearby Hospitals & Send Case
       </button>
     </div>

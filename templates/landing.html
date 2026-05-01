@@ -2,65 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cureva — AI-Powered Medical Analysis</title>
+  <title>Cureva — AI-Powered Medical Intelligence</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Cureva brings AI-powered medical analysis to patients with instant symptom insights, medical image analysis, and nearby hospital discovery.">
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=4">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}?v=4">
 </head>
 <body>
 
 <!-- ==================== NAVBAR ==================== -->
-<header class="navbar" id="navbar">
+<header class="navbar navbar--blend" id="navbar">
   <div class="container navbar-inner">
     <a href="/" class="logo">Cureva</a>
 
-    <nav class="nav-links">
-      <a href="/login">Patient Portal</a>
-      <a href="/login">For Hospitals</a>
-    </nav>
 
     <div class="nav-actions">
-      <a href="/login">Sign In</a>
-      <a href="/login?role=patient" class="btn-primary">Get Started</a>
+      <a href="/login?role=patient" class="nav-cta">
+        Get Started
+      </a>
     </div>
   </div>
 </header>
 
 <!-- ==================== HERO ==================== -->
 <section class="hero">
-  <span class="badge">AI-Assisted Healthcare Platform</span>
-  <h1>
-    Smarter Health Insights,<br>
-    <span>When You Need Them Most</span>
-  </h1>
-  <p>
-    Upload medical images, describe your symptoms, and receive instant
-    AI-powered analysis with actionable guidance and nearby hospital recommendations.
-  </p>
+  <!-- Drifting mesh background -->
+  <div class="hero-mesh">
+    <div class="hero-mesh-orb"></div>
+    <div class="hero-mesh-orb"></div>
+    <div class="hero-mesh-orb"></div>
+  </div>
 
-  <div class="hero-actions">
-    <a href="/login?role=patient" class="btn-primary">🔬 Analyze My Report</a>
-    <a href="/login?role=hospital" class="btn-secondary">🏥 For Hospitals</a>
+  <div class="hero-content">
+    <span class="badge">AI-Assisted Healthcare Platform</span>
+    <h1>
+      Smarter<br><em>Health</em><br>Insights
+    </h1>
+    <p>
+      Upload medical images, describe your symptoms, and receive instant
+      AI-powered analysis with actionable guidance and nearby hospital recommendations.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/login?role=patient" class="btn-primary">Analyze My Report</a>
+      <a href="/login?role=hospital" class="btn-secondary">For Hospitals →</a>
+    </div>
+  </div>
+
+  <!-- Wave transition to content -->
+  <div class="wave-container">
+    <div class="wave-curve"></div>
   </div>
 </section>
+
+
 
 <!-- ==================== FEATURES ==================== -->
 <section class="features">
   <div class="container">
-    <p class="section-label">What We Offer</p>
-    <h2>Comprehensive AI-Powered Healthcare</h2>
-    <p>
+    <p class="section-label reveal">What We Offer</p>
+    <h2 class="reveal">Comprehensive AI-Powered Healthcare</h2>
+    <p class="reveal">
       Cureva brings together patients, hospitals, and communities on a single
       intelligent platform for faster insights and better care coordination.
     </p>
 
     <div class="feature-grid">
 
-      <div class="feature-card">
+      <div class="feature-card reveal">
         <div class="icon">🔬</div>
         <h3>AI-Powered Patient Portal</h3>
         <p>
@@ -70,7 +82,7 @@
         </p>
       </div>
 
-      <div class="feature-card">
+      <div class="feature-card reveal">
         <div class="icon">🏥</div>
         <h3>Hospital Case Management</h3>
         <p>
@@ -87,23 +99,23 @@
 <!-- ==================== HOW IT WORKS ==================== -->
 <section class="how-it-works">
   <div class="container">
-    <p class="section-label">Simple Process</p>
-    <h2>How Cureva Works</h2>
+    <p class="section-label reveal">Simple Process</p>
+    <h2 class="reveal">How Cureva Works</h2>
 
     <div class="steps-grid">
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-number">1</div>
         <h3>Describe or Upload</h3>
         <p>Enter your symptoms or upload medical images like X-rays, lab reports, or prescriptions.</p>
       </div>
 
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-number">2</div>
         <h3>AI Analysis</h3>
         <p>Our AI engine analyzes your input and provides detailed, easy-to-understand medical insights.</p>
       </div>
 
-      <div class="step-card">
+      <div class="step-card reveal">
         <div class="step-number">3</div>
         <h3>Get Guidance</h3>
         <p>Receive self-care tips, urgency assessment, specialist recommendations, and nearby hospital suggestions.</p>
@@ -115,7 +127,12 @@
 <!-- ==================== FOOTER ==================== -->
 <footer class="site-footer">
   <div class="container">
-    <div class="footer-grid">
+
+    <div class="footer-quote reveal">
+      <h2>"Intelligence that understands<br>your health, intuitively."</h2>
+    </div>
+
+    <div class="footer-grid reveal">
       <div class="footer-brand">
         <a href="/" class="logo">Cureva</a>
         <p>
@@ -130,6 +147,7 @@
         <a href="/hospital">Hospital Dashboard</a>
         <a href="/patient/hospitals">Find Hospitals</a>
       </div>
+
     </div>
 
     <div class="footer-bottom">
@@ -138,16 +156,38 @@
   </div>
 </footer>
 
-<!-- Navbar scroll effect -->
+<!-- Navbar scroll + Scroll reveal -->
 <script>
+  // Navbar: remove blend on scroll, add solid background
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
-    if (window.scrollY > 10) {
+    if (window.scrollY > 60) {
       navbar.classList.add('scrolled');
+      navbar.classList.remove('navbar--blend');
     } else {
       navbar.classList.remove('scrolled');
+      navbar.classList.add('navbar--blend');
     }
   });
+
+  // Scroll reveal animation
+  const revealElements = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        // Stagger reveals slightly
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, index * 80);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  revealElements.forEach(el => revealObserver.observe(el));
 </script>
 
 </body>

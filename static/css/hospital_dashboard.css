@@ -1,5 +1,6 @@
 /* ================================================
    CUREVA — HOSPITAL DASHBOARD
+   Organic Intelligence Design System
    Case management, KPI cards, modals, filters
    ================================================ */
 
@@ -21,8 +22,9 @@
 }
 
 .section-title {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 20px;
 }
@@ -87,17 +89,19 @@
 }
 
 .kpi-label {
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3em;
   margin-bottom: 8px;
 }
 
 .kpi-value {
+  font-family: var(--font-serif);
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1;
   margin-bottom: 4px;
@@ -266,6 +270,7 @@
 }
 
 .case-patient-name {
+  font-family: var(--font-serif);
   font-weight: 600;
   color: var(--text-primary);
   font-size: 15px;
@@ -315,10 +320,11 @@
   align-items: center;
   padding: 4px 10px;
   border-radius: var(--radius-pill);
-  font-size: 11px;
+  font-family: var(--font-mono);
+  font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.15em;
 }
 
 .badge-emergency {
@@ -440,6 +446,7 @@
 }
 
 .modal-header h2 {
+  font-family: var(--font-serif);
   font-size: 1.375rem;
   color: var(--text-primary);
 }
@@ -483,11 +490,12 @@
 }
 
 .detail-section h3 {
-  font-size: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3em;
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border-light);
@@ -503,11 +511,12 @@
 
 .info-group label {
   display: block;
-  font-size: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3em;
   margin-bottom: 6px;
 }
 
