@@ -29,17 +29,17 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="screenshots/hero.png" alt="Cureva Landing Page — Hero Section" width="100%">
+  <img src="https://github.com/user-attachments/assets/8f41db2b-5377-4f42-859c-524cf97dd560" alt="Cureva Landing Page — Hero Section" width="100%">
 </p>
 <p align="center"><em>Landing Page — Organic Intelligence design with drifting mesh gradients</em></p>
 
 <p align="center">
-  <img src="screenshots/features.png" alt="What We Offer — Feature Cards" width="100%">
+  <img src="https://github.com/user-attachments/assets/aec54ad3-973a-47fd-8ad2-e48d886cf89d" alt="What We Offer — Feature Cards" width="100%">
 </p>
 <p align="center"><em>Feature Overview — AI Patient Portal & Hospital Case Management</em></p>
 
 <p align="center">
-  <img src="screenshots/how_it_works.png" alt="How Cureva Works — 3-Step Process" width="100%">
+  <img src="https://github.com/user-attachments/assets/b310c8da-a3a4-4ca2-8311-7125a9ad9d64" alt="How Cureva Works — 3-Step Process" width="100%">
 </p>
 <p align="center"><em>Simple 3-Step Process — Describe, Analyze, Get Guidance</em></p>
 
