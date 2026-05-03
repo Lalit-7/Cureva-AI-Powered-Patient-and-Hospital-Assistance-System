@@ -1,0 +1,105 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="coregrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="60%" stop-color="#3D40D4"/>
+      <stop offset="100%" stop-color="#1e2170"/>
+    </radialGradient>
+  </defs>
+
+  <!-- TIER 3: outermost tips -->
+  <path d="M80 42 Q78 28 76 16" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M80 42 Q84 28 88 16" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.65"/>
+  <path d="M100 54 Q112 46 122 36" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M100 54 Q116 52 130 50" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M114 80 Q128 76 142 74" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M114 80 Q128 84 142 88" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M100 108 Q112 116 122 128" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M100 108 Q114 118 128 130" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.55"/>
+  <path d="M80 120 Q78 134 76 148" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M80 120 Q84 134 86 148" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M60 108 Q48 116 38 128" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M60 108 Q46 118 32 130" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.55"/>
+  <path d="M46 80 Q32 76 18 74" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M46 80 Q32 84 18 88" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M60 54 Q48 46 38 36" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M60 54 Q44 52 30 50" stroke="#3D40D4" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.6"/>
+
+  <!-- TIER 2: mid dendrites -->
+  <path d="M80 58 Q80 50 80 42" stroke="#3D40D4" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M80 58 Q74 50 70 42 Q68 36 68 30" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.75"/>
+  <path d="M80 58 Q86 50 90 42 Q92 36 92 30" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.75"/>
+  <path d="M80 58 Q90 54 100 54" stroke="#3D40D4" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M90 54 Q96 48 100 42 Q104 36 106 30" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M80 58 Q92 60 100 54" stroke="#3D40D4" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <path d="M80 80 Q96 80 114 80" stroke="#3D40D4" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.88"/>
+  <path d="M96 80 Q104 72 110 66 Q116 60 120 54" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M96 80 Q104 88 110 96 Q116 104 118 110" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.65"/>
+  <path d="M80 80 Q88 90 100 108" stroke="#3D40D4" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M80 80 Q92 92 96 102 Q100 110 100 118" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M80 80 Q80 96 80 120" stroke="#3D40D4" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M80 96 Q74 104 70 114 Q68 122 68 130" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M80 96 Q86 104 90 114 Q92 122 92 130" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.65"/>
+  <path d="M80 80 Q72 90 60 108" stroke="#3D40D4" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M80 80 Q68 92 64 102 Q60 110 60 118" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M80 80 Q64 80 46 80" stroke="#3D40D4" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.88"/>
+  <path d="M64 80 Q56 72 50 66 Q44 60 40 54" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M64 80 Q56 88 50 96 Q44 104 42 110" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.65"/>
+  <path d="M80 80 Q72 68 60 54" stroke="#3D40D4" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  <path d="M80 80 Q68 68 64 58 Q60 50 60 42" stroke="#3D40D4" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7"/>
+  <path d="M80 58 Q74 58 68 56 Q60 54 54 50" stroke="#3D40D4" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.55"/>
+
+  <!-- Cross-connections (synapses) -->
+  <path d="M80 58 Q84 64 90 68" stroke="#4a4de8" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M70 68 Q74 62 80 58" stroke="#4a4de8" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M90 68 Q84 76 80 80" stroke="#4a4de8" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.45"/>
+  <path d="M70 92 Q74 86 80 80" stroke="#4a4de8" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.45"/>
+  <path d="M96 80 Q90 70 88 60" stroke="#3D40D4" stroke-width="1.0" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <path d="M64 80 Q70 70 72 60" stroke="#3D40D4" stroke-width="1.0" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <path d="M96 80 Q90 90 88 100" stroke="#3D40D4" stroke-width="1.0" stroke-linecap="round" fill="none" opacity="0.4"/>
+  <path d="M64 80 Q70 90 72 100" stroke="#3D40D4" stroke-width="1.0" stroke-linecap="round" fill="none" opacity="0.4"/>
+
+  <!-- Tier 3 micro-nodes -->
+  <circle cx="76" cy="16" r="2.5" fill="#3D40D4" opacity="0.8"/>
+  <circle cx="88" cy="16" r="2.5" fill="#3D40D4" opacity="0.8"/>
+  <circle cx="122" cy="36" r="3" fill="#3D40D4" opacity="0.85"/>
+  <circle cx="130" cy="50" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="142" cy="74" r="3" fill="#3D40D4" opacity="0.85"/>
+  <circle cx="142" cy="88" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="122" cy="128" r="3" fill="#3D40D4" opacity="0.85"/>
+  <circle cx="76" cy="148" r="2.5" fill="#3D40D4" opacity="0.8"/>
+  <circle cx="86" cy="148" r="2.5" fill="#3D40D4" opacity="0.8"/>
+  <circle cx="38" cy="128" r="3" fill="#3D40D4" opacity="0.85"/>
+  <circle cx="18" cy="74" r="3" fill="#3D40D4" opacity="0.85"/>
+  <circle cx="18" cy="88" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="38" cy="36" r="3" fill="#3D40D4" opacity="0.85"/>
+  <circle cx="30" cy="50" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="106" cy="30" r="2.5" fill="#3D40D4" opacity="0.8"/>
+  <circle cx="54" cy="30" r="2.5" fill="#3D40D4" opacity="0.8"/>
+  <circle cx="120" cy="54" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="40" cy="54" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="118" cy="110" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="42" cy="110" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="68" cy="130" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="92" cy="130" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="68" cy="30" r="2.5" fill="#3D40D4" opacity="0.75"/>
+  <circle cx="92" cy="30" r="2.5" fill="#3D40D4" opacity="0.75"/>
+
+  <!-- Tier 2 branch-end nodes -->
+  <circle cx="80" cy="42" r="4" fill="#3D40D4" opacity="0.9"/>
+  <circle cx="100" cy="54" r="4" fill="#3D40D4" opacity="0.9"/>
+  <circle cx="114" cy="80" r="4" fill="#3D40D4" opacity="0.9"/>
+  <circle cx="100" cy="108" r="4" fill="#3D40D4" opacity="0.9"/>
+  <circle cx="80" cy="120" r="4" fill="#3D40D4" opacity="0.9"/>
+  <circle cx="60" cy="108" r="4" fill="#3D40D4" opacity="0.9"/>
+  <circle cx="46" cy="80" r="4" fill="#3D40D4" opacity="0.9"/>
+  <circle cx="60" cy="54" r="4" fill="#3D40D4" opacity="0.9"/>
+
+  <!-- Nucleus -->
+  <circle cx="80" cy="80" r="18" fill="#1a1d50" opacity="0.95"/>
+  <circle cx="80" cy="80" r="16" stroke="#6366f1" stroke-width="1.4" opacity="0.65" fill="none"/>
+  <circle cx="80" cy="80" r="14" fill="url(#coregrad)"/>
+  <circle cx="76" cy="76" r="4.5" fill="white" opacity="0.12"/>
+  <circle cx="80" cy="80" r="4.5" fill="white" opacity="0.55"/>
+  <circle cx="80" cy="80" r="2.5" fill="white" opacity="0.9"/>
+</svg>

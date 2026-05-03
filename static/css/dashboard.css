@@ -41,6 +41,11 @@
   color: var(--primary-dark);
 }
 
+.sidebar-logo .logo-icon {
+  width: 34px;
+  height: 34px;
+}
+
 .sidebar-menu {
   display: flex;
   flex-direction: column;
