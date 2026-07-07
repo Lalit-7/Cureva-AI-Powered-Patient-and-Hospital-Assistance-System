@@ -164,25 +164,31 @@ def health_check():
 # ==================== AUTH API ====================
 @app.route("/api/auth/login", methods=["POST"])
 def api_login():
-    data = request.json
-    email = data.get('email')
-    password = data.get('password')
-    role = data.get('role', 'patient')  # Get requested role from frontend
-    
-    user = User.query.filter_by(email=email, role=role).first()
-    
-    if user and verify_password(password, user.password):
-        session['user_id'] = user.id
-        session['username'] = user.username
-        session['role'] = user.role
+    try:
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+        role = data.get('role', 'patient')  # Get requested role from frontend
         
-        return jsonify({
-            "success": True, 
-            "user": user.to_dict(),
-            "redirect": "/patient" if user.role == 'patient' else "/hospital"
-        })
+        user = User.query.filter_by(email=email, role=role).first()
         
-    return jsonify({"success": False, "error": "Invalid credentials"}), 401
+        if user and verify_password(password, user.password):
+            session['user_id'] = user.id
+            session['username'] = user.username
+            session['role'] = user.role
+            
+            return jsonify({
+                "success": True, 
+                "user": user.to_dict(),
+                "redirect": "/patient" if user.role == 'patient' else "/hospital"
+            })
+            
+        return jsonify({"success": False, "error": "Invalid credentials"}), 401
+    except Exception as e:
+        print(f"❌ Login error: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        return jsonify({"success": False, "error": f"Server error: {str(e)}"}), 500
 
 
 @app.route("/api/auth/signup", methods=["POST"])
@@ -244,6 +250,8 @@ def api_signup():
         db.session.rollback()
         print(f"❌ Signup error: {e}")
         return jsonify({"success": False, "error": "Registration failed. Please try again"}), 500
+
+@app.route("/api/auth/logout", methods=["POST"])
 def api_logout():
     session.clear()
     return jsonify({"success": True, "redirect": "/"})

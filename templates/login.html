@@ -202,7 +202,10 @@
         btn.innerText = 'Sign In';
       }
     } catch (err) {
-      msg.innerText = 'Network error. Please try again.';
+      console.error('Login error:', err);
+      msg.innerText = err.message && err.message !== 'Failed to fetch' 
+        ? err.message 
+        : 'Network error. Please check your connection and try again.';
       msg.style.display = 'block';
       btn.disabled = false;
       btn.innerText = 'Sign In';
@@ -270,7 +273,9 @@
       }
     } catch (err) {
       console.error('Signup error:', err);
-      errorMsg.innerText = 'Network error. Please try again.';
+      errorMsg.innerText = err.message && err.message !== 'Failed to fetch' 
+        ? err.message 
+        : 'Network error. Please check your connection and try again.';
       errorMsg.style.display = 'block';
       btn.disabled = false;
       btn.innerText = 'Create Account';
