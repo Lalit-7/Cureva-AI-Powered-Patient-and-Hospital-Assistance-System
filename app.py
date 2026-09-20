@@ -52,7 +52,21 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
     # Production: PostgreSQL from Render or other providers
+    # Fix postgres:// to postgresql:// (required by SQLAlchemy 1.4+)
+    if DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    # Robust connection pooling and SSL settings for PostgreSQL
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping': True,       # Detect stale/broken connections before use
+        'pool_recycle': 300,         # Recycle connections every 5 minutes
+        'pool_size': 5,              # Keep 5 connections in the pool
+        'max_overflow': 10,          # Allow up to 10 overflow connections
+        'connect_args': {
+            'sslmode': 'require',    # Require SSL for Render.com PostgreSQL
+            'connect_timeout': 10,   # Timeout after 10 seconds
+        }
+    }
     print("✅ Using PostgreSQL database from DATABASE_URL")
 else:
     # Development: Local SQLite - Use temp directory to avoid OneDrive sync issues
@@ -106,12 +120,14 @@ def init_db():
                     print("✅ Demo hospital created: Demo_Hospital (Demo_Hospital@gmail.com)")
                 
                 app.db_initialized = True
+                app.db_available = True
         except Exception as e:
             import traceback
             print(f"⚠️ Database initialization warning: {str(e)}", file=sys.stderr)
             print(traceback.format_exc(), file=sys.stderr)
-            # Don't crash if DB initialization fails, allow the app to continue
+            # Mark as initialized (don't retry every request) but flag DB as unavailable
             app.db_initialized = True
+            app.db_available = False
 
 # ==================== HELPER FUNCTIONS ====================
 def get_demo_user_id():
@@ -1417,10 +1433,23 @@ def poll_new_messages():
         
         recent_convs = [c for c in conversations if c.updated_at > recent_cutoff]
         
+        # Compute unread status inline (unread_count is not a model attribute)
+        has_unread = False
+        for c in conversations:
+            if role == 'patient':
+                cutoff = c.patient_last_read
+                unread = [m for m in c.messages if m.sender_id == c.hospital_id and (cutoff is None or m.created_at > cutoff)]
+            else:
+                cutoff = c.hospital_last_read
+                unread = [m for m in c.messages if m.sender_id == c.patient_id and (cutoff is None or m.created_at > cutoff)]
+            if unread:
+                has_unread = True
+                break
+        
         return jsonify({
             "success": True,
             "conversations": [c.to_dict() for c in recent_convs],
-            "has_unread": any(c.unread_count > 0 for c in conversations)
+            "has_unread": has_unread
         })
         
     except Exception as e:
